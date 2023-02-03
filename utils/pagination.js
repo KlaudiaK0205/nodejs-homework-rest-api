@@ -1,12 +1,33 @@
-const paginate = async (model, page, limit) => {
-    const parsePage = parseInt(page);
-    const parseLimit = parseInt(limit);
-    const skip = (parsePage - 1) * parseLimit;
-    const count = await model.estimatedDocumentCount();
-    const result = await model.find().skip(skip).limit(parseLimit);
-    const totalPages = Math.ceil(count / parseLimit);
+const paginate = (model) => async (req, res, next) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
 
-    return { ...result, totalPages };
-};
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
 
-module.exports = { paginate };
+    const result = {}
+
+    if (endIndex < await model.countDocuments().exec()) {
+        result.next = {
+            page: page + 1,
+            limit: limit
+        }
+    }
+    
+    if (startIndex > 0) {
+        result.previous = {
+            page: page - 1,
+            limit: limit
+        }
+    }
+    try {
+        result.total = await model.find().limit(limit).skip(startIndex).exec()
+        res.paginate = result
+        next()
+    } catch (e) {
+        res.status(500).json({ message: e.message })
+    }
+    
+}
+
+module.exports = paginate;
