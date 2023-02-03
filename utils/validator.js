@@ -1,9 +1,11 @@
 const joi = require("joi");
+
 const contactSchema = joi.object({
   name: joi.string(),
   email: joi.string().email(),
   phone: joi.string(),
 });
+
 
 const userSchema = joi.object({
   password: joi.string().min(5),
@@ -17,6 +19,7 @@ const validator = (schema) => (body) => {
 };
 
 const contactValidate = validator(contactSchema);
+
 const userValidate = validator(userSchema);
 
 module.exports = { contactValidate, userValidate };
