@@ -14,7 +14,12 @@
     "cross-env": "7.0.3",
     "express": "4.17.1",
     "joi": "^17.7.0",
+<<<<<<< Updated upstream
     "mongoose": "^6.8.4",
+=======
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.9.1",
+>>>>>>> Stashed changes
     "morgan": "1.10.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1"
